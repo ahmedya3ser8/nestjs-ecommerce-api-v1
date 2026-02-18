@@ -1,10 +1,9 @@
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import slugify from 'slugify';
-import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
 
-@Entity({ name: 'categories' })
-export class Category {
+@Entity({ name: 'brands' })
+export class Brand {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,9 +27,6 @@ export class Category {
 
   @UpdateDateColumn({ type: 'timestamp', precision: 6 })
   updatedAt: Date;
-
-  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
-  subCategories: SubCategory[];
 
   @BeforeInsert()
   @BeforeUpdate()

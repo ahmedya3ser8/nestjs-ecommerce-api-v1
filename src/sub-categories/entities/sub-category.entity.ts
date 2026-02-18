@@ -1,24 +1,21 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import slugify from 'slugify';
-import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
+import { Category } from "src/categories/entities/category.entity";
 
-@Entity({ name: 'categories' })
-export class Category {
+@Entity({ name: 'subCategories' })
+export class SubCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
   
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column({ length: 500, nullable: true })
   description: string;
-
-  @Column({ nullable: true })
-  image: string;
 
   @Column({ default: true })
   isActive: boolean;
@@ -29,8 +26,8 @@ export class Category {
   @UpdateDateColumn({ type: 'timestamp', precision: 6 })
   updatedAt: Date;
 
-  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
-  subCategories: SubCategory[];
+  @ManyToOne(() => Category, (category) => category.subCategories)
+  category: Category;
 
   @BeforeInsert()
   @BeforeUpdate()

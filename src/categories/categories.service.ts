@@ -26,7 +26,7 @@ export class CategoriesService {
   }
 
   public async findAll() {
-    const categories = await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find({ relations: ['subCategories'] });
     return {
       status: 'success',
       message: 'category retrieved successfully',
@@ -36,7 +36,7 @@ export class CategoriesService {
   }
 
   public async findOne(id: number) {
-    const category = await this.categoryRepository.findOne({ where: { id } });
+    const category = await this.categoryRepository.findOne({ where: { id }, relations: ['subCategories'] });
     if (!category) throw new NotFoundException('category not found');
     return {
       status: 'success',
@@ -52,6 +52,7 @@ export class CategoriesService {
     category.name = updateCategoryDto.name ?? category.name;
     category.description = updateCategoryDto.description ?? category.description;
     category.image = updateCategoryDto.image ?? category.image;
+    category.isActive = updateCategoryDto.isActive ?? category.isActive;
 
     await this.categoryRepository.save(category);
 
