@@ -1,6 +1,8 @@
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import { Expose, Transform } from "class-transformer";
 import slugify from 'slugify';
+
+import { Product } from "src/products/entities/product.entity";
 
 @Entity({ name: 'brands' })
 export class Brand {
@@ -16,6 +18,8 @@ export class Brand {
   @Column({ length: 500, nullable: true })
   description: string;
 
+  @Expose()
+  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/brands/${value}` : null)
   @Column({ nullable: true })
   image: string;
 
@@ -27,6 +31,9 @@ export class Brand {
 
   @UpdateDateColumn({ type: 'timestamp', precision: 6 })
   updatedAt: Date;
+
+  @OneToMany(() => Product, (product) => product.brand)
+  products: Product[];
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -5,10 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
 import { SubCategoriesModule } from './sub-categories/sub-categories.module';
 import { BrandsModule } from './brands/brands.module';
+import { ProductsModule } from './products/products.module';
 
 import { Category } from './categories/entities/category.entity';
 import { SubCategory } from './sub-categories/entities/sub-category.entity';
 import { Brand } from './brands/entities/brand.entity';
+import { Product } from './products/entities/product.entity';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { Brand } from './brands/entities/brand.entity';
           password: config.get<string>('DB_PASSWORD'),
           port: config.get<number>('DB_PORT'),
           synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand]
+          entities: [Category, SubCategory, Brand, Product]
         }
       }
     }),
@@ -33,7 +35,8 @@ import { Brand } from './brands/entities/brand.entity';
       envFilePath: `.env.${process.env.NODE_ENV}`
     }),
     SubCategoriesModule,
-    BrandsModule
+    BrandsModule,
+    ProductsModule
   ],
   controllers: [],
   providers: [],

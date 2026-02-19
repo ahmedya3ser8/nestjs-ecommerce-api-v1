@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -9,8 +10,9 @@ export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Post()
-  create(@Body() createBrandDto: CreateBrandDto) {
-    return this.brandsService.create(createBrandDto);
+  @UseInterceptors(FileInterceptor('image'))
+  create(@Body() createBrandDto: CreateBrandDto, @UploadedFile() file: Express.Multer.File) {
+    return this.brandsService.create(createBrandDto, file);
   }
 
   @Get()
@@ -23,9 +25,10 @@ export class BrandsController {
     return this.brandsService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandsService.update(id, updateBrandDto);
+  @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateBrandDto: UpdateBrandDto, @UploadedFile() file?: Express.Multer.File) {
+    return this.brandsService.update(id, updateBrandDto, file);
   }
 
   @Delete(':id')

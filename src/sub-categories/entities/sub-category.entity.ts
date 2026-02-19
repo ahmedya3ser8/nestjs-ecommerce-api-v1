@@ -1,7 +1,8 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import slugify from 'slugify';
 import { Category } from "src/categories/entities/category.entity";
+import { Product } from "src/products/entities/product.entity";
 
 @Entity({ name: 'subCategories' })
 export class SubCategory {
@@ -28,6 +29,9 @@ export class SubCategory {
 
   @ManyToOne(() => Category, (category) => category.subCategories)
   category: Category;
+
+  @OneToMany(() => Product, (product) => product.subCategory)
+  products: Product[];
 
   @BeforeInsert()
   @BeforeUpdate()

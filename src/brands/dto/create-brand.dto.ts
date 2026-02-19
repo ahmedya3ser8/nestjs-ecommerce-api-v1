@@ -12,10 +12,6 @@ export class CreateBrandDto {
   @MaxLength(500, { message: 'brand description is too long' })
   description?: string;
 
-  @IsString()
-  @IsOptional()
-  image?: string;
-
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

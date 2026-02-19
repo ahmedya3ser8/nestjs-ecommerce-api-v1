@@ -12,10 +12,6 @@ export class CreateCategoryDto {
   @MaxLength(500, { message: 'category description is too long' })
   description?: string;
 
-  @IsString()
-  @IsOptional()
-  image?: string;
-
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
