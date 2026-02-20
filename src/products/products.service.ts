@@ -9,6 +9,9 @@ import { Product } from './entities/product.entity';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
 
+import { existsSync, unlinkSync } from 'fs';
+import { join } from 'path';
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -17,7 +20,7 @@ export class ProductsService {
     @InjectRepository(SubCategory) private readonly subCategoryRepository: Repository<SubCategory>
   ) {}
 
-  public async create(createProductDto: CreateProductDto) {
+  public async create(createProductDto: CreateProductDto, files: { imageCover?: Express.Multer.File[]; images?: Express.Multer.File[] } ) {
     const brand = await this.brandRepository.findOne({ where: { id: createProductDto.brandId } });
     if (!brand) throw new NotFoundException(`brand with id ${createProductDto.brandId} not found`);
     
@@ -27,7 +30,9 @@ export class ProductsService {
     const product = this.productRepository.create({
       ...createProductDto,
       brand,
-      subCategory
+      subCategory,
+      imageCover: files?.imageCover?.[0]?.filename ?? undefined,
+      images: files?.images?.map(f => f.filename) ?? []
     });
     await this.productRepository.save(product);
 
@@ -58,9 +63,33 @@ export class ProductsService {
     }
   }
 
-  public async update(id: number, updateProductDto: UpdateProductDto) {
+  public async update(id: number, updateProductDto: UpdateProductDto, files: { imageCover?: Express.Multer.File[]; images?: Express.Multer.File[] } ) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['brand', 'subCategory', 'subCategory.category'] });
     if (!product) throw new NotFoundException('product not found');
+
+    if (files?.imageCover?.length && product.imageCover) {
+      const imagePath = join(process.cwd(), `./images/products/${product.imageCover}`);
+      if (existsSync(imagePath)) {
+        unlinkSync(imagePath);
+      }
+    }
+
+    if (files?.images?.length && product.images.length) {
+      for (const image of product.images) {
+        const imagePath = join(process.cwd(), `./images/products/${image}`);
+        if (existsSync(imagePath)) {
+          unlinkSync(imagePath);
+        }
+      }
+    }
+
+    if (files?.imageCover?.length) {
+      product.imageCover = files.imageCover[0].filename;
+    }
+
+    if (files?.images?.length) {
+      product.images = files.images.map(f => f.filename);
+    }
 
     product.title = updateProductDto.title ?? product.title;
     product.description = updateProductDto.description ?? product.description;
@@ -71,8 +100,6 @@ export class ProductsService {
     product.ratingAverage = updateProductDto.ratingAverage ?? product.ratingAverage;
     product.ratingQuantity = updateProductDto.ratingQuantity ?? product.ratingQuantity;
     product.sold = updateProductDto.sold ?? product.sold;
-    product.imageCover = updateProductDto.imageCover ?? product.imageCover;
-    product.images = updateProductDto.images ?? product.images;
     product.colors = updateProductDto.colors ?? product.colors;
 
     if (updateProductDto.brandId) {

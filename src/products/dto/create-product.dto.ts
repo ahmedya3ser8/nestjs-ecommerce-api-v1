@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { 
   IsArray,
   IsBoolean, IsInt, IsNotEmpty, IsNumber, 
@@ -18,14 +19,17 @@ export class CreateProductDto {
   @MaxLength(2000, { message: 'product description is too long' })
   description: string;
 
+  @Type(() => Number)
   @IsInt()
   @IsNotEmpty({ message: 'quantity is required' })
   quantity: number;
 
+  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 }, { message: 'Price must be a valid decimal' })
   @IsNotEmpty({ message: 'quantity is required' })
   price: number;
 
+  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 }, { message: 'price after discount must be a valid decimal' })
   @IsOptional()
   priceAfterDiscount: number;
@@ -35,33 +39,34 @@ export class CreateProductDto {
   @IsString({ each: true })
   colors: string[];
 
+  @Type(() => Boolean)
   @IsBoolean()
   @IsOptional()
   isActive: boolean;
 
+  @Type(() => Number)
   @IsNumber()
   @Min(1)
   @Max(5)
   ratingAverage: number;
 
+  @Type(() => Number)
   @IsInt()
   @IsOptional()
   ratingQuantity: number;
   
+  @Type(() => Number)
   @IsInt()
   @IsOptional()
   sold: number;
 
-  @IsString()
-  imageCover: string;
-  
-  @IsArray()
-  @IsOptional()
-  images: string[];
-
+  @Type(() => Number)
   @IsInt()
+  @IsOptional()
   brandId: number;
   
+  @Type(() => Number)
   @IsInt()
+  @IsOptional()
   subCategoryId: number;
 }

@@ -3,6 +3,7 @@ import slugify from "slugify";
 
 import { Brand } from "src/brands/entities/brand.entity";
 import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
+import { Expose, Transform } from "class-transformer";
 
 @Entity({ name: 'products' })
 export class Product {
@@ -33,9 +34,13 @@ export class Product {
   @Column({ type: 'text', array: true, default: [] })
   colors: string[];
 
+  @Expose()
+  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/products/${value}` : null)
   @Column()
   imageCover: string;
 
+  @Expose()
+  @Transform(({ value }) => value?.map((img: any) => `${process.env.BASE_URL}/images/products/${img}`))
   @Column({ type: 'text', array: true, default: [] })
   images: string[];
 

@@ -8,7 +8,6 @@ import { Brand } from './entities/brand.entity';
 
 import { join } from 'path';
 import { unlinkSync } from 'fs';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class BrandsService {
