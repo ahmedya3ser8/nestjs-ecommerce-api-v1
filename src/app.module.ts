@@ -1,16 +1,20 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { CategoriesModule } from './categories/categories.module';
 import { SubCategoriesModule } from './sub-categories/sub-categories.module';
 import { BrandsModule } from './brands/brands.module';
 import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 import { Category } from './categories/entities/category.entity';
 import { SubCategory } from './sub-categories/entities/sub-category.entity';
 import { Brand } from './brands/entities/brand.entity';
 import { Product } from './products/entities/product.entity';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -26,7 +30,7 @@ import { Product } from './products/entities/product.entity';
           password: config.get<string>('DB_PASSWORD'),
           port: config.get<number>('DB_PORT'),
           synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand, Product]
+          entities: [Category, SubCategory, Brand, Product, User]
         }
       }
     }),
@@ -36,9 +40,16 @@ import { Product } from './products/entities/product.entity';
     }),
     SubCategoriesModule,
     BrandsModule,
-    ProductsModule
+    ProductsModule,
+    UsersModule,
+    AuthModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor
+    }
+  ],
 })
 export class AppModule {}
