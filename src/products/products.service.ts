@@ -43,8 +43,12 @@ export class ProductsService {
     }
   }
 
-  public async findAll() {
-    const products = await this.productRepository.find({ relations: ['brand', 'subCategory', 'subCategory.category'] });
+  public async findAll(page: number = 1, limit: number = 10) {
+    const products = await this.productRepository.find({ 
+      skip: (page - 1) * limit,
+      take: limit,
+      relations: ['brand', 'subCategory', 'subCategory.category'] 
+    });
     return {
       status: 'success',
       message: 'products retrieved successfully',

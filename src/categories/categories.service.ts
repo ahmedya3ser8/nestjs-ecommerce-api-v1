@@ -30,8 +30,12 @@ export class CategoriesService {
     }
   }
 
-  public async findAll() {
-    const categories = await this.categoryRepository.find({ relations: ['subCategories'] });
+  public async findAll(page: number = 1, limit: number = 10) {
+    const categories = await this.categoryRepository.find({ 
+      skip: (page - 1) * limit,
+      take: limit,
+      relations: ['subCategories'] 
+    });
     return {
       status: 'success',
       message: 'category retrieved successfully',

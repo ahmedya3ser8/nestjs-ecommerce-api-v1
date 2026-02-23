@@ -30,6 +30,9 @@ export class User {
   @Column({ nullable: true })
   profileImage: string;
 
+  @Column({ type: 'timestamp', nullable: true })
+  passwordChangedAt: Date;
+
   @CreateDateColumn({ type: 'timestamp', precision: 6 })
   createdAt: Date;
 

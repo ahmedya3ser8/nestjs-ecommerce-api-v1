@@ -4,7 +4,9 @@ export type JwtPayload = {
   id: number,
   fullName: string,
   email: string,
-  role: UserRole
+  role: UserRole;
+  iat?: number;
+  exp?: number;
 }
 
 declare global {

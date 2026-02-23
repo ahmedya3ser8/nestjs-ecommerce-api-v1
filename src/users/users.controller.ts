@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Query } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 
@@ -13,6 +13,7 @@ import { CurrentUser } from './decorators/user.decorator';
 
 import { UserRole } from 'src/utils/enums';
 import type { JwtPayload } from 'src/utils/types';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 @Controller('api/v1/users')
 export class UsersController {
@@ -30,6 +31,12 @@ export class UsersController {
   updateLoggedUser(@CurrentUser() payload: JwtPayload, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(payload.id, updateUserDto, payload);
   }
+
+  @Patch('changeMyPassword')
+  @UseGuards(AuthGuard)
+  updateLoggedUserPassword(@CurrentUser() payload: JwtPayload, @Body() updateUserPasswordDto: UpdateUserPasswordDto) {
+    return this.usersService.updatePassword(payload.id, updateUserPasswordDto);
+  }
   
   @Delete('deleteMe')
   @UseGuards(AuthGuard)
@@ -46,8 +53,8 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.usersService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -60,8 +67,15 @@ export class UsersController {
   @Patch(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto, @CurrentUser() payload: JwtPayload,) {
+    return this.usersService.update(id, updateUserDto, payload);
+  }
+
+  @Patch('changePassword/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  updatePassword(@Param('id', ParseIntPipe) id: number, @Body() updateUserPasswordDto: UpdateUserPasswordDto) {
+    return this.usersService.updatePassword(id, updateUserPasswordDto);
   }
 
   @Delete(':id')

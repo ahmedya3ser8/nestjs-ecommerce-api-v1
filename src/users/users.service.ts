@@ -2,16 +2,22 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+
 import { User } from './entities/user.entity';
 import { JwtPayload } from 'src/utils/types';
 import { UserRole } from 'src/utils/enums';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private jwtService: JwtService
+  ) {}
 
   public async create(createUserDto: CreateUserDto) {
     const emailExist = await this.userRepository.findOne({ where: { email: createUserDto.email } });
@@ -35,8 +41,11 @@ export class UsersService {
     }
   }
 
-  public async findAll() {
-    const users = await this.userRepository.find();
+  public async findAll(page: number = 1, limit: number = 10) {
+    const users = await this.userRepository.find({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return {
       status: 'success',
       message: 'users retrieved successfully',
@@ -78,17 +87,49 @@ export class UsersService {
     user.email = updateUserDto.email ?? user.email;
     user.phone = updateUserDto.phone ?? user.phone;
 
-    if (updateUserDto.password) {
-      const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
-      user.password = hashedPassword;
-    }
-
     await this.userRepository.save(user);
 
     return {
       status: 'success',
       message: 'user updated successfully',
       data: user
+    }
+  }
+
+  public async updatePassword(id: number, updateUserPasswordDto: UpdateUserPasswordDto) {
+    const { currentPassword, newPassword, confirmNewPassword } = updateUserPasswordDto;
+    
+    // check if user exists
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('user not found');
+
+    // check current password matched with user password
+    const isMatchedPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatchedPassword) throw new BadRequestException('Current password is incorrect');
+
+    // check if newPassword and confirmNewPassword matched
+    if (newPassword !== confirmNewPassword) throw new BadRequestException('Confirm new password is incorrect')
+
+    // hashed new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    user.passwordChangedAt = new Date(); 
+
+    await this.userRepository.save(user);
+
+    const token = await this.generateJwt({
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role
+    })
+
+    return {
+      status: 'success',
+      message: 'password updated successfully',
+      data: user,
+      token
     }
   }
 
@@ -103,5 +144,9 @@ export class UsersService {
       message: 'user deleted successfully',
       data: null
     }
+  }
+
+  private generateJwt(payload: JwtPayload) {
+    return this.jwtService.signAsync(payload);
   }
 }

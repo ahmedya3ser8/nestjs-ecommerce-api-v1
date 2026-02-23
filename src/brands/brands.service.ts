@@ -30,8 +30,11 @@ export class BrandsService {
     }
   }
 
-  public async findAll() {
-    const brands = await this.brandRepository.find();
+  public async findAll(page: number = 1, limit: number = 10) {
+    const brands = await this.brandRepository.find({
+      skip: (page - 1) * limit,
+      take: limit
+    });
     return {
       status: 'success',
       message: 'brand retrieved successfully',

@@ -35,8 +35,11 @@ export class SubCategoriesService {
     }
   }
 
-  public async findAll() {
-    const subCategories = await this.subCategoryRepository.find();
+  public async findAll(page: number = 1, limit: number = 10) {
+    const subCategories = await this.subCategoryRepository.find({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return {
       status: 'success',
       message: 'subCategory retrieved successfully',

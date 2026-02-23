@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query } from '@nestjs/common';
 
 import { SubCategoriesService } from './sub-categories.service';
 import { CreateSubCategoryDto } from './dto/create-sub-category.dto';
@@ -14,8 +14,8 @@ export class SubCategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.subCategoriesService.findAll();
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.subCategoriesService.findAll(page, limit);
   }
 
   @Get(':id')

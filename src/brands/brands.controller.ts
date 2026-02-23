@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BrandsService } from './brands.service';
@@ -16,8 +16,8 @@ export class BrandsController {
   }
 
   @Get()
-  findAll() {
-    return this.brandsService.findAll();
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.brandsService.findAll(page, limit);
   }
 
   @Get(':id')
