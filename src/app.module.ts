@@ -18,7 +18,6 @@ import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
-    CategoriesModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -38,6 +37,7 @@ import { User } from './users/entities/user.entity';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
     }),
+    CategoriesModule,
     SubCategoriesModule,
     BrandsModule,
     ProductsModule,

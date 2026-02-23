@@ -1,15 +1,17 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { diskStorage } from 'multer';
+import { MulterModule } from '@nestjs/platform-express';
+import { JwtModule } from '@nestjs/jwt';
 
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
+import { UsersModule } from 'src/users/users.module';
 
 import { Product } from './entities/product.entity';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
 
-import { diskStorage } from 'multer';
-import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   controllers: [ProductsController],
@@ -33,7 +35,9 @@ import { MulterModule } from '@nestjs/platform-express';
         }
       },
       limits: { fileSize: 1024 * 1024 * 5 } // 5MB
-    })
+    }),
+    UsersModule,
+    JwtModule
   ]
 })
 export class ProductsModule {}

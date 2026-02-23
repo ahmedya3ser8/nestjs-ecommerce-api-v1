@@ -1,11 +1,13 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
+import { JwtModule } from '@nestjs/jwt';
 import { diskStorage } from 'multer';
 
 import { CategoriesService } from './categories.service';
 import { CategoriesController } from './categories.controller';
 import { Category } from './entities/category.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [CategoriesController],
@@ -29,7 +31,9 @@ import { Category } from './entities/category.entity';
         }
       },
       limits: { fileSize: 1024 * 1024 * 2 } // 2MB
-    })
+    }),
+    UsersModule,
+    JwtModule
   ]
 })
 export class CategoriesModule {}
