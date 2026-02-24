@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { existsSync, unlinkSync } from 'fs';
+import { join } from 'path';
+import * as bcrypt from 'bcryptjs';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,7 +21,7 @@ export class UsersService {
     private jwtService: JwtService
   ) {}
 
-  public async create(createUserDto: CreateUserDto) {
+  public async create(createUserDto: CreateUserDto, file: Express.Multer.File) {
     const emailExist = await this.userRepository.findOne({ where: { email: createUserDto.email } });
     if (emailExist) throw new BadRequestException('Email already exist');
 
@@ -30,7 +32,8 @@ export class UsersService {
 
     const newUser = this.userRepository.create({
       ...createUserDto,
-      password: hashedPassword
+      password: hashedPassword,
+      profileImage: file?.filename ?? null
     });
     await this.userRepository.save(newUser);
 
@@ -64,7 +67,7 @@ export class UsersService {
     }
   }
 
-  public async update(id: number, updateUserDto: UpdateUserDto, payload?: JwtPayload) {
+  public async update(id: number, updateUserDto: UpdateUserDto, payload?: JwtPayload, file?: Express.Multer.File) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException('user not found');
 
@@ -81,6 +84,15 @@ export class UsersService {
     if (payload?.role === UserRole.ADMIN) {
       user.role = updateUserDto.role ?? user.role;
       user.isActive = updateUserDto.isActive ?? user.isActive;
+    }
+
+    if (file && user.profileImage) {
+      const imagePath = join(process.cwd(), `./images/users/${user.profileImage}`);
+      if (existsSync(imagePath)) unlinkSync(imagePath);
+    }
+
+    if (file) {
+      user.profileImage = file?.filename;
     }
 
     user.fullName = updateUserDto.fullName ?? user.fullName;
@@ -108,7 +120,7 @@ export class UsersService {
     if (!isMatchedPassword) throw new BadRequestException('Current password is incorrect');
 
     // check if newPassword and confirmNewPassword matched
-    if (newPassword !== confirmNewPassword) throw new BadRequestException('Confirm new password is incorrect')
+    if (newPassword !== confirmNewPassword) throw new BadRequestException('Confirm new password is incorrect');
 
     // hashed new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);

@@ -7,7 +7,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
 import { join } from 'path';
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 @Injectable()
 export class CategoriesService {
@@ -60,7 +60,7 @@ export class CategoriesService {
 
     if (file && category.image) {
       const imagePath = join(process.cwd(), `./images/categories/${category.image}`);
-      unlinkSync(imagePath);
+      if (existsSync(imagePath)) unlinkSync(imagePath);
     }
 
     if (file) {

@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateBrandDto {
@@ -12,6 +13,7 @@ export class CreateBrandDto {
   @MaxLength(500, { message: 'brand description is too long' })
   description?: string;
 
+  @Type(() => Boolean)
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

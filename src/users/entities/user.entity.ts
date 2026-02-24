@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { UserRole } from "src/utils/enums";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose, Transform } from "class-transformer";
 
 @Entity({ name: 'users' })
 export class User {
@@ -27,11 +27,25 @@ export class User {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
+  @Expose()
   @Column({ nullable: true })
+  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/users/${value}` : null)
   profileImage: string;
 
   @Column({ type: 'timestamp', nullable: true })
   passwordChangedAt: Date;
+
+  @Column({ type: 'varchar', nullable: true })
+  @Exclude()
+  passwordResetCode: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  @Exclude()
+  passwordResetExpires: Date | null;
+  
+  @Column({ default: false })
+  @Exclude()
+  passwordResetVerified: boolean;
 
   @CreateDateColumn({ type: 'timestamp', precision: 6 })
   createdAt: Date;

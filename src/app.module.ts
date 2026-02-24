@@ -15,6 +15,7 @@ import { SubCategory } from './sub-categories/entities/sub-category.entity';
 import { Brand } from './brands/entities/brand.entity';
 import { Product } from './products/entities/product.entity';
 import { User } from './users/entities/user.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { User } from './users/entities/user.entity';
     BrandsModule,
     ProductsModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    MailModule
   ],
   controllers: [],
   providers: [

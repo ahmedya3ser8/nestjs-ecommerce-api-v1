@@ -7,7 +7,7 @@ import { UpdateBrandDto } from './dto/update-brand.dto';
 import { Brand } from './entities/brand.entity';
 
 import { join } from 'path';
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 @Injectable()
 export class BrandsService {
@@ -59,7 +59,7 @@ export class BrandsService {
 
     if (file && brand.image) {
       const imagePath = join(process.cwd(), `./images/brands/${brand.image}`);
-      unlinkSync(imagePath);
+      if (existsSync(imagePath)) unlinkSync(imagePath);
     }
 
     if (file) {

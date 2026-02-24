@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateCategoryDto {
@@ -12,6 +13,7 @@ export class CreateCategoryDto {
   @MaxLength(500, { message: 'category description is too long' })
   description?: string;
 
+  @Type(() => Boolean)
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 
@@ -14,6 +14,7 @@ import { CurrentUser } from 'src/users/decorators/user.decorator';
 
 import { UserRole } from 'src/utils/enums';
 import type { JwtPayload } from 'src/utils/types';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('api/v1/users')
 export class UsersController {
@@ -46,8 +47,9 @@ export class UsersController {
   
   // for admin only
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @UseInterceptors(FileInterceptor('profileImage'))
+  create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Express.Multer.File) {
+    return this.usersService.create(createUserDto, file);
   }
 
   @Get()
@@ -65,10 +67,16 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('profileImage'))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto, @CurrentUser() payload: JwtPayload,) {
-    return this.usersService.update(id, updateUserDto, payload);
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() updateUserDto: UpdateUserDto, 
+    @CurrentUser() payload: JwtPayload, 
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    return this.usersService.update(id, updateUserDto, payload, file);
   }
 
   @Patch('changePassword/:id')
