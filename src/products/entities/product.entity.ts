@@ -5,6 +5,7 @@ import { Brand } from "src/brands/entities/brand.entity";
 import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
 import { Expose, Transform } from "class-transformer";
 import { Review } from "src/reviews/entities/review.entity";
+import { Wishlist } from "src/wishlists/entities/wishlist.entity";
 
 @Entity({ name: 'products' })
 export class Product {
@@ -68,6 +69,9 @@ export class Product {
 
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.product)
+  wishlists: Wishlist[];
 
   @BeforeInsert()
   @BeforeUpdate()

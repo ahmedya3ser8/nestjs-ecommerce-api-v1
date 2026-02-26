@@ -3,6 +3,7 @@ import { Exclude, Expose, Transform } from "class-transformer";
 
 import { UserRole } from "src/utils/enums";
 import { Review } from "src/reviews/entities/review.entity";
+import { Wishlist } from "src/wishlists/entities/wishlist.entity";
 
 @Entity({ name: 'users' })
 export class User {
@@ -56,4 +57,7 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
+  wishlists: Wishlist[];
 }

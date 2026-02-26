@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { WishlistsModule } from './wishlists/wishlists.module';
 
 import { Category } from './categories/entities/category.entity';
 import { SubCategory } from './sub-categories/entities/sub-category.entity';
@@ -18,6 +19,7 @@ import { Brand } from './brands/entities/brand.entity';
 import { Product } from './products/entities/product.entity';
 import { User } from './users/entities/user.entity';
 import { Review } from './reviews/entities/review.entity';
+import { Wishlist } from './wishlists/entities/wishlist.entity';
 
 @Module({
   imports: [
@@ -32,7 +34,7 @@ import { Review } from './reviews/entities/review.entity';
           password: config.get<string>('DB_PASSWORD'),
           port: config.get<number>('DB_PORT'),
           synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand, Product, User, Review]
+          entities: [Category, SubCategory, Brand, Product, User, Review, Wishlist]
         }
       }
     }),
@@ -47,7 +49,8 @@ import { Review } from './reviews/entities/review.entity';
     UsersModule,
     AuthModule,
     MailModule,
-    ReviewsModule
+    ReviewsModule,
+    WishlistsModule
   ],
   controllers: [],
   providers: [
