@@ -9,13 +9,15 @@ import { BrandsModule } from './brands/brands.module';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 import { Category } from './categories/entities/category.entity';
 import { SubCategory } from './sub-categories/entities/sub-category.entity';
 import { Brand } from './brands/entities/brand.entity';
 import { Product } from './products/entities/product.entity';
 import { User } from './users/entities/user.entity';
-import { MailModule } from './mail/mail.module';
+import { Review } from './reviews/entities/review.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { MailModule } from './mail/mail.module';
           password: config.get<string>('DB_PASSWORD'),
           port: config.get<number>('DB_PORT'),
           synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand, Product, User]
+          entities: [Category, SubCategory, Brand, Product, User, Review]
         }
       }
     }),
@@ -44,7 +46,8 @@ import { MailModule } from './mail/mail.module';
     ProductsModule,
     UsersModule,
     AuthModule,
-    MailModule
+    MailModule,
+    ReviewsModule
   ],
   controllers: [],
   providers: [

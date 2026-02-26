@@ -34,6 +34,13 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @Get(':productId/reviews')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  findAllReviewsByProductId(@Param('productId', ParseIntPipe) productId: number) {
+    return this.productsService.findAllReviewsByProductId(productId);
+  }
+
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'imageCover', maxCount: 1 },

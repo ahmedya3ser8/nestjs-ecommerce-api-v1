@@ -1,9 +1,10 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import slugify from "slugify";
 
 import { Brand } from "src/brands/entities/brand.entity";
 import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
 import { Expose, Transform } from "class-transformer";
+import { Review } from "src/reviews/entities/review.entity";
 
 @Entity({ name: 'products' })
 export class Product {
@@ -47,7 +48,7 @@ export class Product {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', default: 0 })
   ratingAverage: number;
 
   @Column({ type: 'int', default: 0 })
@@ -64,6 +65,9 @@ export class Product {
 
   @ManyToOne(() => SubCategory, (subCategory) => subCategory.products)
   subCategory: SubCategory;
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[];
 
   @BeforeInsert()
   @BeforeUpdate()

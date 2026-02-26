@@ -35,8 +35,8 @@ export class CreateProductDto {
   priceAfterDiscount: number;
 
   @IsArray()
-  @IsOptional()
   @IsString({ each: true })
+  @IsOptional()
   colors: string[];
 
   @Type(() => Boolean)
@@ -48,6 +48,7 @@ export class CreateProductDto {
   @IsNumber()
   @Min(1)
   @Max(5)
+  @IsOptional()
   ratingAverage: number;
 
   @Type(() => Number)

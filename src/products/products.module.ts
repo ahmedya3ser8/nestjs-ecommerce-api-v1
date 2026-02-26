@@ -11,13 +11,13 @@ import { UsersModule } from 'src/users/users.module';
 import { Product } from './entities/product.entity';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
-
+import { Review } from 'src/reviews/entities/review.entity';
 
 @Module({
   controllers: [ProductsController],
   providers: [ProductsService],
   imports: [
-    TypeOrmModule.forFeature([Product, Brand, SubCategory]),
+    TypeOrmModule.forFeature([Product, Brand, SubCategory, Review]),
     MulterModule.register({
       storage: diskStorage({
         destination: './images/products',

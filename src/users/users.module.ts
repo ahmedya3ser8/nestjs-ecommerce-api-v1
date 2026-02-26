@@ -10,13 +10,14 @@ import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { diskStorage } from 'multer';
 import { MulterModule } from '@nestjs/platform-express';
+import { Review } from 'src/reviews/entities/review.entity';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService, AuthGuard, RolesGuard],
   exports: [UsersService, AuthGuard, RolesGuard],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Review]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {

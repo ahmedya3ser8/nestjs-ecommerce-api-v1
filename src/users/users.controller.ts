@@ -41,8 +41,8 @@ export class UsersController {
   
   @Delete('deleteMe')
   @UseGuards(AuthGuard)
-  deleteLoggedUser(@CurrentUser() payload: JwtPayload) {
-    return this.usersService.remove(payload.id);
+  deactivateLoggedUser(@CurrentUser() payload: JwtPayload) {
+    return this.usersService.deactivate(payload.id);
   }
   
   // for admin only
@@ -64,6 +64,13 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
+  }
+
+  @Get(':userId/reviews')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  findAllReviewsByProductId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.usersService.findAllReviewsByUserId(userId);
   }
 
   @Patch(':id')
@@ -90,6 +97,6 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+    return this.usersService.deactivate(id);
   }
 }

@@ -11,6 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 import { User } from './entities/user.entity';
+import { Review } from 'src/reviews/entities/review.entity';
 import { JwtPayload } from 'src/utils/types';
 import { UserRole } from 'src/utils/enums';
 
@@ -18,6 +19,7 @@ import { UserRole } from 'src/utils/enums';
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
     private jwtService: JwtService
   ) {}
 
@@ -145,16 +147,33 @@ export class UsersService {
     }
   }
 
-  public async remove(id: number) {
+  public async deactivate(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) throw new NotFoundException('user not found');
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.isActive) throw new BadRequestException('User not found or already deactivated')
 
-    await this.userRepository.remove(user);
+    await this.userRepository.update(id, { isActive: false })
 
     return {
       status: 'success',
-      message: 'user deleted successfully',
+      message: 'User deactivate successfully',
       data: null
+    }
+  }
+
+  public async findAllReviewsByUserId(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+    
+    const reviews = await this.reviewRepository.find({ 
+      where: { user: { id: userId } }
+    })
+
+    return {
+      status: 'success',
+      message: `Reviews for user ${userId}`,
+      total: reviews.length,
+      data: reviews
     }
   }
 

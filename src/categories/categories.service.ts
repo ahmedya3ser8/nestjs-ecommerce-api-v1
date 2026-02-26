@@ -46,7 +46,7 @@ export class CategoriesService {
 
   public async findOne(id: number) {
     const category = await this.categoryRepository.findOne({ where: { id }, relations: ['subCategories'] });
-    if (!category) throw new NotFoundException('category not found');
+    if (!category) throw new NotFoundException('Category not found');
     return {
       status: 'success',
       message: 'category retrieved successfully',
@@ -56,7 +56,7 @@ export class CategoriesService {
 
   public async update(id: number, updateCategoryDto: UpdateCategoryDto, file?: Express.Multer.File) {
     const category = await this.categoryRepository.findOne({ where: { id } });
-    if (!category) throw new NotFoundException('category not found');
+    if (!category) throw new NotFoundException('Category not found');
 
     if (file && category.image) {
       const imagePath = join(process.cwd(), `./images/categories/${category.image}`);
@@ -82,7 +82,7 @@ export class CategoriesService {
 
   public async remove(id: number) {
     const category = await this.categoryRepository.findOne({ where: { id } });
-    if (!category) throw new NotFoundException('category not found');
+    if (!category) throw new NotFoundException('Category not found');
 
     await this.categoryRepository.remove(category);
 

@@ -8,6 +8,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
+import { Review } from 'src/reviews/entities/review.entity';
 
 import { existsSync, unlinkSync } from 'fs';
 import { join } from 'path';
@@ -17,7 +18,8 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
     @InjectRepository(Brand) private readonly brandRepository: Repository<Brand>,
-    @InjectRepository(SubCategory) private readonly subCategoryRepository: Repository<SubCategory>
+    @InjectRepository(SubCategory) private readonly subCategoryRepository: Repository<SubCategory>,
+    @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
   ) {}
 
   public async create(createProductDto: CreateProductDto, files: { imageCover?: Express.Multer.File[]; images?: Express.Multer.File[] } ) {
@@ -47,7 +49,7 @@ export class ProductsService {
     const products = await this.productRepository.find({ 
       skip: (page - 1) * limit,
       take: limit,
-      relations: ['brand', 'subCategory', 'subCategory.category'] 
+      relations: ['brand', 'subCategory', 'subCategory.category', 'reviews'] 
     });
     return {
       status: 'success',
@@ -58,7 +60,10 @@ export class ProductsService {
   }
 
   public async findOne(id: number) {
-    const product = await this.productRepository.findOne({ where: { id }, relations: ['brand', 'subCategory', 'subCategory.category'] });
+    const product = await this.productRepository.findOne({ 
+      where: { id }, 
+      relations: ['brand', 'subCategory', 'subCategory.category', 'reviews'] 
+    });
     if (!product) throw new NotFoundException(`product with id ${id} not found`);
     return {
       status: 'success',
@@ -136,6 +141,23 @@ export class ProductsService {
       status: 'success',
       message: 'product deleted successfully',
       data: null
+    }
+  }
+
+  public async findAllReviewsByProductId(productId: number) {
+    const product = await this.productRepository.findOne({ where: { id: productId } });
+    if (!product) throw new NotFoundException('Product not found');
+    
+    const reviews = await this.reviewRepository.find({ 
+      where: { product: { id: productId } },
+      relations: ['user']
+    })
+
+    return {
+      status: 'success',
+      message: `Reviews for product ${productId}`,
+      total: reviews.length,
+      data: reviews
     }
   }
 }

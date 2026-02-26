@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude, Expose, Transform } from "class-transformer";
 
 import { UserRole } from "src/utils/enums";
-import { Exclude, Expose, Transform } from "class-transformer";
+import { Review } from "src/reviews/entities/review.entity";
 
 @Entity({ name: 'users' })
 export class User {
@@ -52,4 +53,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp', precision: 6 })
   updatedAt: Date;
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 }
