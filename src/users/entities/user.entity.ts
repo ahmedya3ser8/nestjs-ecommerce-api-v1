@@ -4,6 +4,8 @@ import { Exclude, Expose, Transform } from "class-transformer";
 import { UserRole } from "src/utils/enums";
 import { Review } from "src/reviews/entities/review.entity";
 import { Wishlist } from "src/wishlists/entities/wishlist.entity";
+import { Addressess } from "src/addressess/entities/addressess.entity";
+import { Cart } from "src/carts/entities/cart.entity";
 
 @Entity({ name: 'users' })
 export class User {
@@ -60,4 +62,10 @@ export class User {
 
   @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
   wishlists: Wishlist[];
+
+  @OneToMany(() => Addressess, (addressess) => addressess.user)
+  addressess: Addressess[];
+  
+  @OneToMany(() => Cart, (cart) => cart.user)
+  carts: Cart[];
 }
