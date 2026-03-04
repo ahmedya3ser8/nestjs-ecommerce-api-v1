@@ -15,6 +15,7 @@ import { WishlistsModule } from './wishlists/wishlists.module';
 import { AddressessModule } from './addressess/addressess.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { CartsModule } from './carts/carts.module';
+import { OrdersModule } from './orders/orders.module';
 
 import { Category } from './categories/entities/category.entity';
 import { SubCategory } from './sub-categories/entities/sub-category.entity';
@@ -23,10 +24,13 @@ import { Product } from './products/entities/product.entity';
 import { User } from './users/entities/user.entity';
 import { Review } from './reviews/entities/review.entity';
 import { Wishlist } from './wishlists/entities/wishlist.entity';
-import { Addressess } from './addressess/entities/addressess.entity';
+import { Address } from './addressess/entities/addressess.entity';
 import { Coupon } from './coupons/entities/coupon.entity';
 import { Cart } from './carts/entities/cart.entity';
 import { CartItem } from './carts/entities/cart-item.entity';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
+
 
 @Module({
   imports: [
@@ -41,7 +45,7 @@ import { CartItem } from './carts/entities/cart-item.entity';
           password: config.get<string>('DB_PASSWORD'),
           port: config.get<number>('DB_PORT'),
           synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand, Product, User, Review, Wishlist, Addressess, Coupon, Cart, CartItem]
+          entities: [Category, SubCategory, Brand, Product, User, Review, Wishlist, Address, Coupon, Cart, CartItem, Order, OrderItem]
         }
       }
     }),
@@ -60,7 +64,8 @@ import { CartItem } from './carts/entities/cart-item.entity';
     WishlistsModule,
     AddressessModule,
     CouponsModule,
-    CartsModule
+    CartsModule,
+    OrdersModule
   ],
   controllers: [],
   providers: [

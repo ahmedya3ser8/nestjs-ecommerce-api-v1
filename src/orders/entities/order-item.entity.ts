@@ -1,18 +1,17 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-import { Exclude } from "class-transformer";
 import { Product } from "src/products/entities/product.entity";
-import { Cart } from "./cart.entity";
+import { Order } from "./order.entity";
 
-@Entity({ name: 'cartItems' })
-export class CartItem {
+@Entity({ name: 'orderItems' })
+export class OrderItem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   quantity: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
   @CreateDateColumn({ type: 'timestamp', precision: 6 })
@@ -21,10 +20,9 @@ export class CartItem {
   @UpdateDateColumn({ type: 'timestamp', precision: 6 })
   updatedAt: Date;
 
-  @ManyToOne(() => Product, (product) => product.cartItems)
+  @ManyToOne(() => Product, (product) => product.orderItems, { eager: true })
   product: Product;
-  
-  @ManyToOne(() => Cart, (cart) => cart.cartItems)
-  @Exclude()
-  cart: Cart;
+
+  @ManyToOne(() => Order, (order) => order.orderItems, { onDelete: 'CASCADE' })
+  order: Order;
 }

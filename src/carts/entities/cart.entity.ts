@@ -8,10 +8,24 @@ export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ 
+    type: 'decimal', 
+    precision: 10, scale: 2, default: 0, 
+    transformer: { 
+      to: (value: number) => value, 
+      from: (value: string) => parseFloat(value) 
+    } 
+  })
   totalCartPrice: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Column({ 
+    type: 'decimal', 
+    precision: 10, scale: 2, nullable: true,
+    transformer: { 
+      to: (value: number) => value, 
+      from: (value: string) => parseFloat(value) 
+    } 
+  })
   totalPriceAfterDiscount: number | null;
 
   @CreateDateColumn({ type: 'timestamp', precision: 6 })

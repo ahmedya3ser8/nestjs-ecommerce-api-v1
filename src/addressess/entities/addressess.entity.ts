@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Up
 import { User } from "src/users/entities/user.entity";
 
 @Entity({ name: 'addressess' })
-export class Addressess {
+export class Address {
   @PrimaryGeneratedColumn()
   id: number;
   

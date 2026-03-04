@@ -5,13 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAddressessDto } from './dto/create-addressess.dto';
 import { UpdateAddressessDto } from './dto/update-addressess.dto';
 
-import { Addressess } from './entities/addressess.entity';
+import { Address } from './entities/addressess.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AddressessService {
   constructor(
-    @InjectRepository(Addressess) private readonly addressessRepository: Repository<Addressess>,
+    @InjectRepository(Address) private readonly addressRepository: Repository<Address>,
     @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
 
@@ -20,18 +20,18 @@ export class AddressessService {
     if (!user) throw new NotFoundException('User not found');
 
     if (createAddressessDto.isDefault) {
-      await this.addressessRepository.update(
+      await this.addressRepository.update(
         { user: { id: userId }, isDefault: true },
         { isDefault: false }
       )
     }
     
-    const address = this.addressessRepository.create({
+    const address = this.addressRepository.create({
       ...createAddressessDto,
       user
     })
 
-    await this.addressessRepository.save(address);
+    await this.addressRepository.save(address);
 
     return {
       status: 'success',
@@ -41,7 +41,7 @@ export class AddressessService {
   }
 
   public async findAll(userId: number) {
-    const addressess = await this.addressessRepository.find({
+    const addressess = await this.addressRepository.find({
       where: { user: { id: userId } },
       order: { createdAt: 'DESC' },
       relations: ['user']
@@ -56,7 +56,7 @@ export class AddressessService {
   }
 
   public async update(id: number, updateAddressessDto: UpdateAddressessDto, userId: number) {
-    const address = await this.addressessRepository.findOne({ 
+    const address = await this.addressRepository.findOne({ 
       where: { 
         id,
         user: { id: userId }
@@ -66,14 +66,14 @@ export class AddressessService {
     if (!address) throw new NotFoundException('Address not found');
 
     if (updateAddressessDto.isDefault) {
-      await this.addressessRepository.update(
+      await this.addressRepository.update(
         { user: { id: userId }, isDefault: true },
         { isDefault: false }
       )
     }
 
     Object.assign(address, updateAddressessDto);
-    await this.addressessRepository.save(address);
+    await this.addressRepository.save(address);
 
     return {
       status: 'success',
@@ -83,7 +83,7 @@ export class AddressessService {
   }
 
   public async remove(id: number, userId: number) {
-    const address = await this.addressessRepository.findOne({ 
+    const address = await this.addressRepository.findOne({ 
       where: { 
         id,
         user: { id: userId }
@@ -92,7 +92,7 @@ export class AddressessService {
     
     if (!address) throw new NotFoundException('Address not found');
 
-    await this.addressessRepository.remove(address);
+    await this.addressRepository.remove(address);
 
     return {
       status: 'success',

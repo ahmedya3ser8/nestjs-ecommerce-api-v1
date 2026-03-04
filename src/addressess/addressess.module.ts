@@ -6,14 +6,14 @@ import { AddressessService } from './addressess.service';
 import { AddressessController } from './addressess.controller';
 import { UsersModule } from 'src/users/users.module';
 
-import { Addressess } from './entities/addressess.entity';
+import { Address } from './entities/addressess.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Module({
   controllers: [AddressessController],
   providers: [AddressessService],
   imports: [
-    TypeOrmModule.forFeature([Addressess, User]),
+    TypeOrmModule.forFeature([Address, User]),
     UsersModule,
     JwtModule
   ]

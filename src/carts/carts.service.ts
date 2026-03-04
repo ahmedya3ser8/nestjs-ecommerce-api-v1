@@ -80,7 +80,7 @@ export class CartsService {
 
     return {
       status: 'success',
-      message: 'Product added successfully to your cart',
+      message: 'Cart retrieved successfully',
       numOfCartItems: cart.cartItems.length,
       data: cart
     }
