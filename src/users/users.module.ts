@@ -34,7 +34,7 @@ import { RolesGuard } from './guards/roles.guard';
     }),
     MulterModule.register({
       storage: diskStorage({
-        destination: '/tmp/images/users',
+        destination: './images/users',
         filename: (req, file, cb) => {
           const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
           const fileName = `${prefix}-${file.originalname}`;

@@ -20,7 +20,7 @@ import { Review } from '../reviews/entities/review.entity';
     TypeOrmModule.forFeature([Product, Brand, SubCategory, Review]),
     MulterModule.register({
       storage: diskStorage({
-        destination: '/tmp/images/products',
+        destination: './images/products',
         filename: (req, file, cb) => {
           const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
           const fileName = `${prefix}-${file.originalname}`;

@@ -16,7 +16,7 @@ import { UsersModule } from '../users/users.module';
     TypeOrmModule.forFeature([Category]),
     MulterModule.register({
       storage: diskStorage({
-        destination: '/tmp/images/categories',
+        destination: './images/categories',
         filename: (req, file, cb) => {
           const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
           const fileName = `${prefix}-${file.originalname}`;
