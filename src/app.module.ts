@@ -18,13 +18,14 @@ import { CartsModule } from './carts/carts.module';
 import { OrdersModule } from './orders/orders.module';
 
 import { dataSourceOptions } from 'db/data-source';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`
+      envFilePath: process.env.NODE_ENV !== 'production' ? `.env.${process.env.NODE_ENV}` : '.env'
     }),
     CategoriesModule,
     SubCategoriesModule,
@@ -40,7 +41,7 @@ import { dataSourceOptions } from 'db/data-source';
     CartsModule,
     OrdersModule
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
