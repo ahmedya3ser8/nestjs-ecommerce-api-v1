@@ -1,6 +1,6 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { CategoriesModule } from './categories/categories.module';
@@ -17,38 +17,11 @@ import { CouponsModule } from './coupons/coupons.module';
 import { CartsModule } from './carts/carts.module';
 import { OrdersModule } from './orders/orders.module';
 
-import { Category } from './categories/entities/category.entity';
-import { SubCategory } from './sub-categories/entities/sub-category.entity';
-import { Brand } from './brands/entities/brand.entity';
-import { Product } from './products/entities/product.entity';
-import { User } from './users/entities/user.entity';
-import { Review } from './reviews/entities/review.entity';
-import { Wishlist } from './wishlists/entities/wishlist.entity';
-import { Address } from './addressess/entities/addressess.entity';
-import { Coupon } from './coupons/entities/coupon.entity';
-import { Cart } from './carts/entities/cart.entity';
-import { CartItem } from './carts/entities/cart-item.entity';
-import { Order } from './orders/entities/order.entity';
-import { OrderItem } from './orders/entities/order-item.entity';
-
+import { dataSourceOptions } from 'db/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: 'localhost',
-          database: config.get<string>('DB_DATABASE'),
-          username: config.get<string>('DB_USERNAME'),
-          password: config.get<string>('DB_PASSWORD'),
-          port: config.get<number>('DB_PORT'),
-          synchronize: process.env.NODE_ENV !== 'production',
-          entities: [Category, SubCategory, Brand, Product, User, Review, Wishlist, Address, Coupon, Cart, CartItem, Order, OrderItem]
-        }
-      }
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
