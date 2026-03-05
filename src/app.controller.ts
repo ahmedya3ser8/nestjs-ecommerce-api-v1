@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller()
+@Controller('/')
 export class AppController {
-  @Get('/')
-  find() {
+  @Get()
+  public find() {
     return 'Your app is running'
   }
 }
