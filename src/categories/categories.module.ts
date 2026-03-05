@@ -7,7 +7,7 @@ import { diskStorage } from 'multer';
 import { CategoriesService } from './categories.service';
 import { CategoriesController } from './categories.controller';
 import { Category } from './entities/category.entity';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   controllers: [CategoriesController],

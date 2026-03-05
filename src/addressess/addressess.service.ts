@@ -6,7 +6,7 @@ import { CreateAddressessDto } from './dto/create-addressess.dto';
 import { UpdateAddressessDto } from './dto/update-addressess.dto';
 
 import { Address } from './entities/addressess.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AddressessService {

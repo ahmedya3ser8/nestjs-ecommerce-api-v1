@@ -1,12 +1,12 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Exclude, Expose, Transform } from "class-transformer";
 
-import { UserRole } from "src/utils/enums";
-import { Review } from "src/reviews/entities/review.entity";
-import { Wishlist } from "src/wishlists/entities/wishlist.entity";
-import { Address } from "src/addressess/entities/addressess.entity";
-import { Cart } from "src/carts/entities/cart.entity";
-import { Order } from "src/orders/entities/order.entity";
+import { UserRole } from "../../utils/enums";
+import { Review } from "../../reviews/entities/review.entity";
+import { Wishlist } from "../../wishlists/entities/wishlist.entity";
+import { Address } from "../../addressess/entities/addressess.entity";
+import { Cart } from "../../carts/entities/cart.entity";
+import { Order } from "../../orders/entities/order.entity";
 
 @Entity({ name: 'users' })
 export class User {

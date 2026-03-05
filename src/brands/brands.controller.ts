@@ -4,10 +4,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { RolesGuard } from 'src/users/guards/roles.guard';
-import { UserRole } from 'src/utils/enums';
-import { Roles } from 'src/users/decorators/roles.decorator';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
+import { UserRole } from '../utils/enums';
+import { Roles } from '../users/decorators/roles.decorator';
 
 @Controller('api/v1/brands')
 export class BrandsController {

@@ -1,7 +1,7 @@
 import { CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-import { Product } from "src/products/entities/product.entity";
-import { User } from "src/users/entities/user.entity";
+import { Product } from "../../products/entities/product.entity";
+import { User } from "../../users/entities/user.entity";
 
 @Entity({ name: 'wishlists' })
 @Index(['user', 'product'], { unique: true }) 

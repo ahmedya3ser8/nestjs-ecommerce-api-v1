@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-import { FileInterceptor } from '@nestjs/platform-express';
 import { CategoriesService } from './categories.service';
-import { RolesGuard } from 'src/users/guards/roles.guard';
-import { UserRole } from 'src/utils/enums';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { Roles } from 'src/users/decorators/roles.decorator';
+import { RolesGuard } from '../users/guards/roles.guard';
+import { UserRole } from '../utils/enums';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { Roles } from '../users/decorators/roles.decorator';
 
 @Controller('api/v1/categories')
 export class CategoriesController {

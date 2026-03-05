@@ -4,10 +4,10 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { RolesGuard } from 'src/users/guards/roles.guard';
-import { UserRole } from 'src/utils/enums';
-import { Roles } from 'src/users/decorators/roles.decorator';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
+import { UserRole } from '../utils/enums';
+import { Roles } from '../users/decorators/roles.decorator';
 
 @Controller('api/v1/products')
 export class ProductsController {

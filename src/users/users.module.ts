@@ -1,16 +1,18 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 import { User } from './entities/user.entity';
+import { Review } from '../reviews/entities/review.entity';
+
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { diskStorage } from 'multer';
-import { MulterModule } from '@nestjs/platform-express';
-import { Review } from 'src/reviews/entities/review.entity';
 
 @Module({
   controllers: [UsersController],

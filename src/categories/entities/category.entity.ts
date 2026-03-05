@@ -2,7 +2,7 @@ import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany
 import { Expose, Transform } from "class-transformer";
 import slugify from 'slugify';
 
-import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
+import { SubCategory } from "../../sub-categories/entities/sub-category.entity";
 
 @Entity({ name: 'categories' })
 export class Category {

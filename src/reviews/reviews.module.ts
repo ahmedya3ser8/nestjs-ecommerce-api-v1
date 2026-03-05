@@ -4,11 +4,11 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 
 import { Review } from './entities/review.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { User } from '../users/entities/user.entity';
+import { Product } from '../products/entities/product.entity';
 
 @Module({
   controllers: [ReviewsController],

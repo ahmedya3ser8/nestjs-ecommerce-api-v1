@@ -5,15 +5,15 @@ import { JwtService } from '@nestjs/jwt';
 import { randomInt, createHash } from 'crypto';
 import * as bcrypt from 'bcryptjs';
 
-import { RegisterDto } from 'src/auth/dto/register.dto'; 
+import { RegisterDto } from '../auth/dto/register.dto'; 
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
-import { User } from 'src/users/entities/user.entity';
-import { JwtPayload } from 'src/utils/types';
-import { MailService } from 'src/mail/mail.service';
+import { User } from '../users/entities/user.entity';
+import { JwtPayload } from '../utils/types';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {

@@ -4,9 +4,9 @@ import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { CurrentUser } from 'src/users/decorators/user.decorator';
-import type { JwtPayload } from 'src/utils/types';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { CurrentUser } from '../users/decorators/user.decorator';
+import type { JwtPayload } from '../utils/types';
 import { ValidateCouponDto } from './dto/validate-coupon.dto';
 
 @Controller('api/v1/cart')

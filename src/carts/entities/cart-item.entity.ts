@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { Exclude } from "class-transformer";
-import { Product } from "src/products/entities/product.entity";
+import { Product } from "../../products/entities/product.entity";
 import { Cart } from "./cart.entity";
 
 @Entity({ name: 'cartItems' })

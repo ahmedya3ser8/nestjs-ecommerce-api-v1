@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, Delete, UseGuards, ParseIntPipe, Query } from '@nestjs/common';
 
 import { WishlistsService } from './wishlists.service';
-import { CurrentUser } from 'src/users/decorators/user.decorator';
+import { CurrentUser } from '../users/decorators/user.decorator';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import type { JwtPayload } from 'src/utils/types';
+import { AuthGuard } from '../users/guards/auth.guard';
+import type { JwtPayload } from '../utils/types';
 
 @Controller('api/v1/wishlist')
 export class WishlistsController {

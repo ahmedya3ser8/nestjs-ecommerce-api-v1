@@ -4,9 +4,9 @@ import { CreateAddressessDto } from './dto/create-addressess.dto';
 import { UpdateAddressessDto } from './dto/update-addressess.dto';
 
 import { AddressessService } from './addressess.service';
-import { CurrentUser } from 'src/users/decorators/user.decorator';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import type { JwtPayload } from 'src/utils/types';
+import { CurrentUser } from '../users/decorators/user.decorator';
+import { AuthGuard } from '../users/guards/auth.guard';
+import type { JwtPayload } from '../utils/types';
 
 @Controller('api/v1/addressess')
 export class AddressessController {

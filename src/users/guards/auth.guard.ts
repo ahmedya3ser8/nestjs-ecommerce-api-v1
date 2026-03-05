@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 
-import { JwtPayload } from 'src/utils/types';
+import { JwtPayload } from '../../utils/types';
 import { UsersService } from '../users.service';
 
 @Injectable()

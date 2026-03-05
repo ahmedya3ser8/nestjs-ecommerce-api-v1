@@ -8,11 +8,11 @@ import {
   UpdateDateColumn 
 } from "typeorm";
 
-import { User } from "src/users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 import { OrderItem } from "./order-item.entity";
 
-import { OrderStatusType, PaymentMethodType, PaymentStatusType } from "src/utils/enums";
-import { Address } from "src/addressess/entities/addressess.entity";
+import { OrderStatusType, PaymentMethodType, PaymentStatusType } from "../../utils/enums";
+import { Address } from "../../addressess/entities/addressess.entity";
 
 @Entity({ name: 'orders' })
 export class Order {

@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-import { User } from "src/users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 import { CartItem } from "./cart-item.entity";
 
 @Entity({ name: 'carts' })

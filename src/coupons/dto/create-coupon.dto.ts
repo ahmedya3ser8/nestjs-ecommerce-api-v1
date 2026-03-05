@@ -1,6 +1,6 @@
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 
-import { DiscountType } from "src/utils/enums";
+import { DiscountType } from "../../utils/enums";
 
 export class CreateCouponDto {
   @IsString()

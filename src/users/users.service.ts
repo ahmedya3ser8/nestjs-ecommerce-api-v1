@@ -11,9 +11,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 import { User } from './entities/user.entity';
-import { Review } from 'src/reviews/entities/review.entity';
-import { JwtPayload } from 'src/utils/types';
-import { UserRole } from 'src/utils/enums';
+import { Review } from '../reviews/entities/review.entity';
+import { JwtPayload } from '../utils/types';
+import { UserRole } from '../utils/enums';
 
 @Injectable()
 export class UsersService {

@@ -1,13 +1,13 @@
 import { BadRequestException, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 import { diskStorage } from 'multer';
 
 import { BrandsController } from './brands.controller';
 import { BrandsService } from './brands.service';
 import { Brand } from './entities/brand.entity';
-import { UsersModule } from 'src/users/users.module';
-import { JwtModule } from '@nestjs/jwt';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   controllers: [BrandsController],

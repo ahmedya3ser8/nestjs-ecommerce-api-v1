@@ -4,10 +4,10 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { SubCategoriesService } from './sub-categories.service';
 import { SubCategoriesController } from './sub-categories.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 
 import { SubCategory } from './entities/sub-category.entity';
-import { Category } from 'src/categories/entities/category.entity';
+import { Category } from '../categories/entities/category.entity';
 
 @Module({
   controllers: [SubCategoriesController],

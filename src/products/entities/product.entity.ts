@@ -1,13 +1,13 @@
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import slugify from "slugify";
 
-import { Brand } from "src/brands/entities/brand.entity";
-import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
+import { Brand } from "../../brands/entities/brand.entity";
+import { SubCategory } from "../../sub-categories/entities/sub-category.entity";
 import { Expose, Transform } from "class-transformer";
-import { Review } from "src/reviews/entities/review.entity";
-import { Wishlist } from "src/wishlists/entities/wishlist.entity";
-import { CartItem } from "src/carts/entities/cart-item.entity";
-import { OrderItem } from "src/orders/entities/order-item.entity";
+import { Review } from "../../reviews/entities/review.entity";
+import { Wishlist } from "../../wishlists/entities/wishlist.entity";
+import { CartItem } from "../../carts/entities/cart-item.entity";
+import { OrderItem } from "../../orders/entities/order-item.entity";
 
 @Entity({ name: 'products' })
 export class Product {

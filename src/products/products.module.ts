@@ -6,12 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 
 import { Product } from './entities/product.entity';
-import { Brand } from 'src/brands/entities/brand.entity';
-import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
-import { Review } from 'src/reviews/entities/review.entity';
+import { Brand } from '../brands/entities/brand.entity';
+import { SubCategory } from '../sub-categories/entities/sub-category.entity';
+import { Review } from '../reviews/entities/review.entity';
 
 @Module({
   controllers: [ProductsController],

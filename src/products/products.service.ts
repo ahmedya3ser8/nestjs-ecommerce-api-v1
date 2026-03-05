@@ -6,9 +6,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import { Product } from './entities/product.entity';
-import { Brand } from 'src/brands/entities/brand.entity';
-import { SubCategory } from 'src/sub-categories/entities/sub-category.entity';
-import { Review } from 'src/reviews/entities/review.entity';
+import { Brand } from '../brands/entities/brand.entity';
+import { SubCategory } from '../sub-categories/entities/sub-category.entity';
+import { Review } from '../reviews/entities/review.entity';
 
 import { existsSync, unlinkSync } from 'fs';
 import { join } from 'path';

@@ -3,9 +3,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe,
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { UserRole } from 'src/utils/enums';
-import { Roles } from 'src/users/decorators/roles.decorator';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { UserRole } from '../utils/enums';
+import { Roles } from '../users/decorators/roles.decorator';
 
 @Controller('api/v1/reviews')
 export class ReviewsController {

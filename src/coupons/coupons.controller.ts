@@ -4,11 +4,11 @@ import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 
 import { CouponsService } from './coupons.service';
-import { Roles } from 'src/users/decorators/roles.decorator';
-import { UserRole } from 'src/utils/enums';
+import { Roles } from '../users/decorators/roles.decorator';
+import { UserRole } from '../utils/enums';
 
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { RolesGuard } from 'src/users/guards/roles.guard';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
 
 @Controller('api/v1/coupons')
 export class CouponsController {

@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UsersService } from './users.service';
 
@@ -6,15 +7,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
-import { AuthGuard } from 'src/users/guards/auth.guard'; 
-import { RolesGuard } from 'src/users/guards/roles.guard'; 
+import { AuthGuard } from '../users/guards/auth.guard'; 
+import { RolesGuard } from '../users/guards/roles.guard'; 
 
-import { Roles } from 'src/users/decorators/roles.decorator'; 
-import { CurrentUser } from 'src/users/decorators/user.decorator';
+import { Roles } from '../users/decorators/roles.decorator'; 
+import { CurrentUser } from '../users/decorators/user.decorator';
 
-import { UserRole } from 'src/utils/enums';
-import type { JwtPayload } from 'src/utils/types';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { UserRole } from '../utils/enums';
+import type { JwtPayload } from '../utils/types';
 
 @Controller('api/v1/users')
 export class UsersController {

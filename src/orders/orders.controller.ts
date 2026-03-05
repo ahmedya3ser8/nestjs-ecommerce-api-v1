@@ -4,14 +4,14 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { UpdatePaymentOrderStatusDto } from './dto/update-payment-status.dto';
 import { OrdersService } from './orders.service';
 
-import { Roles } from 'src/users/decorators/roles.decorator';
-import { CurrentUser } from 'src/users/decorators/user.decorator';
+import { Roles } from '../users/decorators/roles.decorator';
+import { CurrentUser } from '../users/decorators/user.decorator';
 
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { RolesGuard } from 'src/users/guards/roles.guard';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
 
-import { UserRole } from 'src/utils/enums';
-import type { JwtPayload } from 'src/utils/types';
+import { UserRole } from '../utils/enums';
+import type { JwtPayload } from '../utils/types';
 
 @Controller('api/v1/orders')
 export class OrdersController {

@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
-import { UserRole } from "src/utils/enums";
+
+import { UserRole } from "../../utils/enums";
 
 export class CreateUserDto {
   @IsString()

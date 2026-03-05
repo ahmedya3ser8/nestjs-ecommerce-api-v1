@@ -4,11 +4,11 @@ import { SubCategoriesService } from './sub-categories.service';
 import { CreateSubCategoryDto } from './dto/create-sub-category.dto';
 import { UpdateSubCategoryDto } from './dto/update-sub-category.dto';
 
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { RolesGuard } from 'src/users/guards/roles.guard';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
 
-import { UserRole } from 'src/utils/enums';
-import { Roles } from 'src/users/decorators/roles.decorator';
+import { UserRole } from '../utils/enums';
+import { Roles } from '../users/decorators/roles.decorator';
 
 @Controller('api/v1/subcategories')
 export class SubCategoriesController {

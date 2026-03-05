@@ -8,10 +8,10 @@ import { ValidateCouponDto } from './dto/validate-coupon.dto';
 
 import { Cart } from './entities/cart.entity';
 import { CartItem } from './entities/cart-item.entity';
-import { Product } from 'src/products/entities/product.entity';
-import { Coupon } from 'src/coupons/entities/coupon.entity';
+import { Product } from '../products/entities/product.entity';
+import { Coupon } from '../coupons/entities/coupon.entity';
 
-import { DiscountType } from 'src/utils/enums';
+import { DiscountType } from '../utils/enums';
 
 @Injectable()
 export class CartsService {

@@ -4,10 +4,10 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AddressessService } from './addressess.service';
 import { AddressessController } from './addressess.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 
 import { Address } from './entities/addressess.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   controllers: [AddressessController],
