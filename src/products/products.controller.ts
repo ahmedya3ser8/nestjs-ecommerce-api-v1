@@ -20,7 +20,7 @@ import { AuthGuard } from '../users/guards/auth.guard';
 import { RolesGuard } from '../users/guards/roles.guard';
 
 import { ProductsService } from './products.service';
-import { ImageFieldsUploadInterceptor } from '../interceptors/image-upload.interceptor';
+import { ImageFieldsUploadInterceptor } from '../utils/interceptors/image-upload.interceptor';
 import { UserRole } from '../utils/enums';
 import { Roles } from '../users/decorators/roles.decorator';
 

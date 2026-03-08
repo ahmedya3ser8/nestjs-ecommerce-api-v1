@@ -22,7 +22,7 @@ import { RolesGuard } from '../users/guards/roles.guard';
 import { CategoriesService } from './categories.service';
 import { Roles } from '../users/decorators/roles.decorator';
 
-import { ImageUploadInterceptor } from '../interceptors/image-upload.interceptor';
+import { ImageUploadInterceptor } from '../utils/interceptors/image-upload.interceptor';
 import { UserRole } from '../utils/enums';
 
 @Controller('api/v1/categories')

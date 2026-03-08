@@ -24,7 +24,7 @@ import { Roles } from '../users/decorators/roles.decorator';
 import { CurrentUser } from '../users/decorators/user.decorator';
 
 import { UsersService } from './users.service';
-import { ImageUploadInterceptor } from '../interceptors/image-upload.interceptor';
+import { ImageUploadInterceptor } from '../utils/interceptors/image-upload.interceptor';
 import { UserRole } from '../utils/enums';
 import type { JwtPayload } from '../utils/types';
 

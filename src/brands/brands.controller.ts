@@ -13,7 +13,7 @@ import {
   UseInterceptors 
 } from '@nestjs/common';
 
-import { ImageUploadInterceptor } from '../interceptors/image-upload.interceptor';
+import { ImageUploadInterceptor } from '../utils/interceptors/image-upload.interceptor';
 import { Roles } from '../users/decorators/roles.decorator';
 
 import { AuthGuard } from '../users/guards/auth.guard';

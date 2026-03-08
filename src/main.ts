@@ -1,8 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import express from 'express';
+import helmet from 'helmet';
 
-import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -14,7 +13,11 @@ async function bootstrap() {
     transform: true
   }))
 
-  app.use('/images', express.static(join(process.cwd(), 'images')));
+  app.use(helmet());
+
+  app.enableCors({
+    origin: 'http://localhost:4200'
+  })
 
   await app.listen(process.env.PORT ?? 3000);
 }
