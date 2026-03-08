@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude } from "class-transformer";
 
 import { Product } from "../../products/entities/product.entity";
 import { Order } from "./order.entity";
@@ -24,5 +25,6 @@ export class OrderItem {
   product: Product;
 
   @ManyToOne(() => Order, (order) => order.orderItems, { onDelete: 'CASCADE' })
+  @Exclude()
   order: Order;
 }

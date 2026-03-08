@@ -68,14 +68,13 @@ export class CartsService {
   }
 
   public async find(userId: number) {
-    let cart = await this.cartRepository.findOne({ 
+    const cart = await this.cartRepository.findOne({ 
       where: { user: { id: userId } },
       relations: ['cartItems.product']
     });
     
-    if (!cart) {
-      cart = this.cartRepository.create({ user: { id: userId }, cartItems: [], totalCartPrice: 0 });
-      await this.cartRepository.save(cart);
+    if (!cart || cart.cartItems.length === 0) {
+      throw new NotFoundException(`There is no cart for this user id: ${userId}`);
     }
 
     return {

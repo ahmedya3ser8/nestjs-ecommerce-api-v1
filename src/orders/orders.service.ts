@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,6 +7,7 @@ import { OrderItem } from './entities/order-item.entity';
 import { Order } from './entities/order.entity';
 import { User } from '../users/entities/user.entity';
 import { CartItem } from '../carts/entities/cart-item.entity';
+import { Product } from '../products/entities/product.entity';
 
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { UpdatePaymentOrderStatusDto } from './dto/update-payment-status.dto';
@@ -19,7 +20,8 @@ export class OrdersService {
     @InjectRepository(OrderItem) private readonly orderItemRepository: Repository<OrderItem>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Cart) private readonly cartRepository: Repository<Cart>,
-    @InjectRepository(CartItem) private readonly cartItemRepository: Repository<CartItem>
+    @InjectRepository(CartItem) private readonly cartItemRepository: Repository<CartItem>,
+    @InjectRepository(Product) private readonly productRepository: Repository<Product>
   ) {}
 
   public async createCashOrder(userId: number) {
@@ -69,11 +71,21 @@ export class OrdersService {
     }))
     await this.orderItemRepository.save(orderItems);
 
-    // update orderItems
-    order.orderItems = orderItems;
+    // update product quantity and sold
+    for (const item of cart.cartItems) {
+      if (item.product.quantity < item.quantity) throw new BadRequestException(`${item.product.title} is out of stock`);
+      await this.productRepository.decrement( { id: item.product.id }, 'quantity', item.quantity );
+      await this.productRepository.increment( { id: item.product.id }, 'sold', item.quantity);
+    }
 
     // clear user cart
     await this.cartItemRepository.remove(cart.cartItems);
+
+    // update orderItems
+    order.orderItems = await this.orderItemRepository.find({
+      where: { order: { id: order.id } },
+      relations: ['product'],
+    });
 
     return {
       status: 'success',
