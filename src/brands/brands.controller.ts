@@ -1,20 +1,36 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { 
+  Body, 
+  Controller,
+  Delete, 
+  Get, 
+  Param, 
+  ParseIntPipe, 
+  Patch, 
+  Post, 
+  Query, 
+  UploadedFile, 
+  UseGuards, 
+  UseInterceptors 
+} from '@nestjs/common';
 
-import { BrandsService } from './brands.service';
-import { CreateBrandDto } from './dto/create-brand.dto';
-import { UpdateBrandDto } from './dto/update-brand.dto';
+import { ImageUploadInterceptor } from '../interceptors/image-upload.interceptor';
+import { Roles } from '../users/decorators/roles.decorator';
+
 import { AuthGuard } from '../users/guards/auth.guard';
 import { RolesGuard } from '../users/guards/roles.guard';
+
 import { UserRole } from '../utils/enums';
-import { Roles } from '../users/decorators/roles.decorator';
+import { BrandsService } from './brands.service';
+
+import { CreateBrandDto } from './dto/create-brand.dto';
+import { UpdateBrandDto } from './dto/update-brand.dto';
 
 @Controller('api/v1/brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(ImageUploadInterceptor('image', 5))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   create(@Body() createBrandDto: CreateBrandDto, @UploadedFile() file: Express.Multer.File) {
@@ -32,7 +48,7 @@ export class BrandsController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(ImageUploadInterceptor('image', 5))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   update(@Param('id', ParseIntPipe) id: number, @Body() updateBrandDto: UpdateBrandDto, @UploadedFile() file?: Express.Multer.File) {

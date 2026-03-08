@@ -1,18 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-
-import { UsersService } from './users.service';
+import { 
+  Body, 
+  Controller, 
+  Delete, 
+  Get, 
+  Param, 
+  ParseIntPipe, 
+  Patch, 
+  Post, 
+  Query, 
+  UploadedFile, 
+  UseGuards, 
+  UseInterceptors 
+} from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
-import { AuthGuard } from '../users/guards/auth.guard'; 
-import { RolesGuard } from '../users/guards/roles.guard'; 
+import { AuthGuard } from '../users/guards/auth.guard';
+import { RolesGuard } from '../users/guards/roles.guard';
 
-import { Roles } from '../users/decorators/roles.decorator'; 
+import { Roles } from '../users/decorators/roles.decorator';
 import { CurrentUser } from '../users/decorators/user.decorator';
 
+import { UsersService } from './users.service';
+import { ImageUploadInterceptor } from '../interceptors/image-upload.interceptor';
 import { UserRole } from '../utils/enums';
 import type { JwtPayload } from '../utils/types';
 
@@ -47,7 +59,7 @@ export class UsersController {
   
   // for admin only
   @Post()
-  @UseInterceptors(FileInterceptor('profileImage'))
+  @UseInterceptors(ImageUploadInterceptor('profileImage'))
   create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Express.Multer.File) {
     return this.usersService.create(createUserDto, file);
   }
@@ -74,7 +86,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('profileImage'))
+  @UseInterceptors(ImageUploadInterceptor('profileImage'))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   update(

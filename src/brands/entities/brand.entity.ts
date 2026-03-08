@@ -1,8 +1,17 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Expose, Transform } from "class-transformer";
+import { 
+  BeforeInsert, 
+  BeforeUpdate, 
+  Column, 
+  CreateDateColumn, 
+  Entity, 
+  OneToMany, 
+  PrimaryGeneratedColumn, 
+  UpdateDateColumn 
+} from "typeorm";
 import slugify from 'slugify';
 
 import { Product } from "../../products/entities/product.entity";
+import { ImageType } from "../../utils/types";
 
 @Entity({ name: 'brands' })
 export class Brand {
@@ -18,10 +27,8 @@ export class Brand {
   @Column({ length: 500, nullable: true })
   description: string;
 
-  @Expose()
-  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/brands/${value}` : null)
-  @Column({ nullable: true })
-  image: string;
+  @Column({ type: 'json', nullable: true })
+  image: ImageType | null;
 
   @Column({ default: true })
   isActive: boolean;

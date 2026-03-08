@@ -1,13 +1,23 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { 
+  BeforeInsert, 
+  BeforeUpdate, 
+  Column, 
+  CreateDateColumn, 
+  Entity, 
+  ManyToOne, 
+  OneToMany, 
+  PrimaryGeneratedColumn, 
+  UpdateDateColumn 
+} from "typeorm";
 import slugify from "slugify";
 
 import { Brand } from "../../brands/entities/brand.entity";
 import { SubCategory } from "../../sub-categories/entities/sub-category.entity";
-import { Expose, Transform } from "class-transformer";
 import { Review } from "../../reviews/entities/review.entity";
 import { Wishlist } from "../../wishlists/entities/wishlist.entity";
 import { CartItem } from "../../carts/entities/cart-item.entity";
 import { OrderItem } from "../../orders/entities/order-item.entity";
+import type { ImageType } from "../../utils/types";
 
 @Entity({ name: 'products' })
 export class Product {
@@ -38,15 +48,11 @@ export class Product {
   @Column({ type: 'text', array: true, default: [] })
   colors: string[];
 
-  @Expose()
-  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/products/${value}` : null)
-  @Column()
-  imageCover: string;
+  @Column({ type: 'json' })
+  imageCover: ImageType;
 
-  @Expose()
-  @Transform(({ value }) => value?.map((img: any) => `${process.env.BASE_URL}/images/products/${img}`))
-  @Column({ type: 'text', array: true, default: [] })
-  images: string[];
+  @Column({ type: 'json', default: [] })
+  images: ImageType[];
 
   @Column({ default: true })
   isActive: boolean;

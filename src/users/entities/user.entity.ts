@@ -1,12 +1,21 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Exclude, Expose, Transform } from "class-transformer";
+import { 
+  Column, 
+  CreateDateColumn, 
+  Entity, 
+  OneToMany, 
+  PrimaryGeneratedColumn, 
+  UpdateDateColumn 
+} from "typeorm";
+import { Exclude } from "class-transformer";
 
-import { UserRole } from "../../utils/enums";
-import { Review } from "../../reviews/entities/review.entity";
-import { Wishlist } from "../../wishlists/entities/wishlist.entity";
 import { Address } from "../../addressess/entities/addressess.entity";
 import { Cart } from "../../carts/entities/cart.entity";
 import { Order } from "../../orders/entities/order.entity";
+import { Review } from "../../reviews/entities/review.entity";
+import { Wishlist } from "../../wishlists/entities/wishlist.entity";
+
+import { UserRole } from "../../utils/enums";
+import { ImageType } from "../../utils/types";
 
 @Entity({ name: 'users' })
 export class User {
@@ -32,10 +41,8 @@ export class User {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @Expose()
-  @Column({ nullable: true })
-  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/users/${value}` : null)
-  profileImage: string;
+  @Column({ type: 'json', nullable: true })
+  profileImage: ImageType | null;
 
   @Column({ type: 'timestamp', nullable: true })
   passwordChangedAt: Date;

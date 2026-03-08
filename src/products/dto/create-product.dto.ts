@@ -63,11 +63,11 @@ export class CreateProductDto {
 
   @Type(() => Number)
   @IsInt()
-  @IsOptional()
+  @IsNotEmpty({ message: 'brandId is required' })
   brandId: number;
   
   @Type(() => Number)
   @IsInt()
-  @IsOptional()
+  @IsNotEmpty({ message: 'subCategoryId is required' })
   subCategoryId: number;
 }

@@ -1,11 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseInterceptors, UploadedFiles, Query, UseGuards } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
+  Delete, 
+  ParseIntPipe, 
+  UseInterceptors, 
+  UploadedFiles, 
+  Query, 
+  UseGuards 
+} from '@nestjs/common';
 
-import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+
 import { AuthGuard } from '../users/guards/auth.guard';
 import { RolesGuard } from '../users/guards/roles.guard';
+
+import { ProductsService } from './products.service';
+import { ImageFieldsUploadInterceptor } from '../interceptors/image-upload.interceptor';
 import { UserRole } from '../utils/enums';
 import { Roles } from '../users/decorators/roles.decorator';
 
@@ -14,10 +29,13 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'imageCover', maxCount: 1 },
-    { name: 'images', maxCount: 5 }
-  ]))
+  @UseInterceptors(ImageFieldsUploadInterceptor(
+    [
+      { name: 'imageCover', maxCount: 1 },
+      { name: 'images', maxCount: 4 }
+    ], 
+    5
+  ))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   create(@Body() createProductDto: CreateProductDto, @UploadedFiles() files: { imageCover?: Express.Multer.File[]; images?: Express.Multer.File[] } ) {
@@ -42,9 +60,9 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileFieldsInterceptor([
+  @UseInterceptors(ImageFieldsUploadInterceptor([
     { name: 'imageCover', maxCount: 1 },
-    { name: 'images', maxCount: 5 }
+    { name: 'images', maxCount: 4 }
   ]))
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)

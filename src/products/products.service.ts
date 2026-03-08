@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
-import { Product } from './entities/product.entity';
 import { Brand } from '../brands/entities/brand.entity';
-import { SubCategory } from '../sub-categories/entities/sub-category.entity';
 import { Review } from '../reviews/entities/review.entity';
+import { SubCategory } from '../sub-categories/entities/sub-category.entity';
+import { Product } from './entities/product.entity';
 
-import { existsSync, unlinkSync } from 'fs';
-import { join } from 'path';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { ImageType } from '../utils/types';
 
 @Injectable()
 export class ProductsService {
@@ -20,6 +20,7 @@ export class ProductsService {
     @InjectRepository(Brand) private readonly brandRepository: Repository<Brand>,
     @InjectRepository(SubCategory) private readonly subCategoryRepository: Repository<SubCategory>,
     @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
+    private readonly cloudinaryService: CloudinaryService
   ) {}
 
   public async create(createProductDto: CreateProductDto, files: { imageCover?: Express.Multer.File[]; images?: Express.Multer.File[] } ) {
@@ -29,12 +30,30 @@ export class ProductsService {
     const subCategory = await this.subCategoryRepository.findOne({ where: { id: createProductDto.subCategoryId } });
     if (!subCategory) throw new NotFoundException(`subCategory with id ${createProductDto.subCategoryId} not found`);
 
+    if (!files?.imageCover?.length) {
+      throw new BadRequestException('imageCover is required');
+    }
+
+    let imageCover: ImageType = await this.cloudinaryService.uploadSingleImage(
+      files.imageCover[0],
+      'ecommerce/products'
+    );
+
+    let images: ImageType[] = [];
+
+    if (files?.images?.length) {
+      images = await this.cloudinaryService.uploadMultipleImages(
+        files.images,
+        'ecommerce/products'
+      );
+    }
+
     const product = this.productRepository.create({
       ...createProductDto,
       brand,
       subCategory,
-      imageCover: files?.imageCover?.[0]?.filename ?? undefined,
-      images: files?.images?.map(f => f.filename) ?? []
+      imageCover,
+      images
     });
     await this.productRepository.save(product);
 
@@ -76,30 +95,6 @@ export class ProductsService {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['brand', 'subCategory', 'subCategory.category'] });
     if (!product) throw new NotFoundException('product not found');
 
-    if (files?.imageCover?.length && product.imageCover) {
-      const imagePath = join(process.cwd(), `./images/products/${product.imageCover}`);
-      if (existsSync(imagePath)) {
-        unlinkSync(imagePath);
-      }
-    }
-
-    if (files?.images?.length && product.images.length) {
-      for (const image of product.images) {
-        const imagePath = join(process.cwd(), `./images/products/${image}`);
-        if (existsSync(imagePath)) {
-          unlinkSync(imagePath);
-        }
-      }
-    }
-
-    if (files?.imageCover?.length) {
-      product.imageCover = files.imageCover[0].filename;
-    }
-
-    if (files?.images?.length) {
-      product.images = files.images.map(f => f.filename);
-    }
-
     product.title = updateProductDto.title ?? product.title;
     product.description = updateProductDto.description ?? product.description;
     product.quantity = updateProductDto.quantity ?? product.quantity;
@@ -122,6 +117,22 @@ export class ProductsService {
       product.subCategory = subCategory;
     }
 
+    if (files?.imageCover?.length) {
+      if (product.imageCover?.publicId) {
+        await this.cloudinaryService.deleteSingleImage(product.imageCover.publicId);
+      }
+      product.imageCover = await this.cloudinaryService.uploadSingleImage(files.imageCover[0], 'ecommerce/products');
+    }
+
+    if (files?.images?.length) {
+      if (product.images?.length) {
+        for (const img of product.images) {
+          if (img.publicId) await this.cloudinaryService.deleteSingleImage(img.publicId);
+        }
+      }
+      product.images = await this.cloudinaryService.uploadMultipleImages(files.images, 'ecommerce/products');
+    }
+
     await this.productRepository.save(product);
 
     return {
@@ -134,6 +145,18 @@ export class ProductsService {
   public async remove(id: number) {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) throw new NotFoundException(`product with id ${id} not found`);
+
+    if (product.imageCover?.publicId) {
+      await this.cloudinaryService.deleteSingleImage(product.imageCover.publicId);
+    }
+
+    if (product.images?.length) {
+      for (const img of product.images) {
+        if (img.publicId) {
+          await this.cloudinaryService.deleteSingleImage(img.publicId);
+        }
+      }
+    }
 
     await this.productRepository.remove(product);
 

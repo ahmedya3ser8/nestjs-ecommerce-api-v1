@@ -1,8 +1,17 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Expose, Transform } from "class-transformer";
+import { 
+  BeforeInsert, 
+  BeforeUpdate, 
+  Column, 
+  CreateDateColumn, 
+  Entity, 
+  OneToMany, 
+  PrimaryGeneratedColumn, 
+  UpdateDateColumn 
+} from "typeorm";
 import slugify from 'slugify';
 
 import { SubCategory } from "../../sub-categories/entities/sub-category.entity";
+import { ImageType } from "../../utils/types";
 
 @Entity({ name: 'categories' })
 export class Category {
@@ -18,10 +27,8 @@ export class Category {
   @Column({ length: 500, nullable: true })
   description: string;
 
-  @Expose()
-  @Transform(({ value }) => value ? `${process.env.BASE_URL}/images/categories/${value}` : null)
-  @Column({ nullable: true })
-  image: string;
+  @Column({ type: 'json', nullable: true })
+  image: ImageType | null;
 
   @Column({ default: true })
   isActive: boolean;

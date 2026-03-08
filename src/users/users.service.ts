@@ -1,26 +1,27 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { existsSync, unlinkSync } from 'fs';
-import { join } from 'path';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
-import { User } from './entities/user.entity';
 import { Review } from '../reviews/entities/review.entity';
-import { JwtPayload } from '../utils/types';
+import { User } from './entities/user.entity';
+
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UserRole } from '../utils/enums';
+import type { ImageType, JwtPayload } from '../utils/types';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Review) private readonly reviewRepository: Repository<Review>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private readonly cloudinaryService: CloudinaryService
   ) {}
 
   public async create(createUserDto: CreateUserDto, file: Express.Multer.File) {
@@ -32,11 +33,22 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
+    let profileImage: ImageType | null = null;
+    
+    if (file) {
+      const result = await this.cloudinaryService.uploadSingleImage(file, 'ecommerce/users');
+      profileImage = {
+        url: result.url,
+        publicId: result.publicId
+      }
+    }
+
     const newUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
-      profileImage: file?.filename ?? null
+      profileImage
     });
+
     await this.userRepository.save(newUser);
 
     return {
@@ -88,13 +100,15 @@ export class UsersService {
       user.isActive = updateUserDto.isActive ?? user.isActive;
     }
 
-    if (file && user.profileImage) {
-      const imagePath = join(process.cwd(), `./images/users/${user.profileImage}`);
-      if (existsSync(imagePath)) unlinkSync(imagePath);
-    }
-
     if (file) {
-      user.profileImage = file?.filename;
+      if (user.profileImage?.publicId) {
+        await this.cloudinaryService.deleteSingleImage(user.profileImage.publicId);
+      }
+      const result = await this.cloudinaryService.uploadSingleImage(file, 'ecommerce/users');
+      user.profileImage = {
+        url: result.url,
+        publicId: result.publicId
+      }
     }
 
     user.fullName = updateUserDto.fullName ?? user.fullName;

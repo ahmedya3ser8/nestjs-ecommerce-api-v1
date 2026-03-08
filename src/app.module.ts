@@ -19,6 +19,7 @@ import { OrdersModule } from './orders/orders.module';
 
 import { dataSourceOptions } from 'db/data-source';
 import { AppController } from './app.controller';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { AppController } from './app.controller';
     AddressessModule,
     CouponsModule,
     CartsModule,
-    OrdersModule
+    OrdersModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
   providers: [

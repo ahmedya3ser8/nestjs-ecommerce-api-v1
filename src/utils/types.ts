@@ -9,6 +9,11 @@ export type JwtPayload = {
   exp?: number;
 }
 
+export type ImageType = {
+  url: string;
+  publicId: string;
+}
+
 declare global {
   namespace Express {
     interface Request {
@@ -16,3 +21,4 @@ declare global {
     }
   }
 }
+

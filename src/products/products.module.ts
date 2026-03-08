@@ -1,43 +1,25 @@
-import { BadRequestException, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { diskStorage } from 'multer';
-import { MulterModule } from '@nestjs/platform-express';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ProductsService } from './products.service';
-import { ProductsController } from './products.controller';
 import { UsersModule } from '../users/users.module';
+import { ProductsController } from './products.controller';
+import { ProductsService } from './products.service';
 
-import { Product } from './entities/product.entity';
 import { Brand } from '../brands/entities/brand.entity';
-import { SubCategory } from '../sub-categories/entities/sub-category.entity';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { Review } from '../reviews/entities/review.entity';
+import { SubCategory } from '../sub-categories/entities/sub-category.entity';
+import { Product } from './entities/product.entity';
 
 @Module({
   controllers: [ProductsController],
   providers: [ProductsService],
   imports: [
     TypeOrmModule.forFeature([Product, Brand, SubCategory, Review]),
-    MulterModule.register({
-      storage: diskStorage({
-        destination: './images/products',
-        filename: (req, file, cb) => {
-          const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`;
-          const fileName = `${prefix}-${file.originalname}`;
-          cb(null, fileName);
-        }
-      }),
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image')) {
-          cb(null, true);
-        } else {
-          cb(new BadRequestException('UnSupported file formate'), false);
-        }
-      },
-      limits: { fileSize: 1024 * 1024 * 5 } // 5MB
-    }),
     UsersModule,
-    JwtModule
+    JwtModule,
+    CloudinaryModule
   ]
 })
 export class ProductsModule {}
