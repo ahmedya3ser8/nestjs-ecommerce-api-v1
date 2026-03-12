@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcryptjs';
 import { Repository } from 'typeorm';
+import type { Response } from 'express';
+import * as bcrypt from 'bcryptjs';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
@@ -124,7 +125,7 @@ export class UsersService {
     }
   }
 
-  public async updatePassword(id: number, updateUserPasswordDto: UpdateUserPasswordDto) {
+  public async updatePassword(id: number, updateUserPasswordDto: UpdateUserPasswordDto, res: Response) {
     const { currentPassword, newPassword, confirmNewPassword } = updateUserPasswordDto;
     
     // check if user exists
@@ -151,6 +152,13 @@ export class UsersService {
       email: user.email,
       fullName: user.fullName,
       role: user.role
+    })
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     })
 
     return {

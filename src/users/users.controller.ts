@@ -8,10 +8,12 @@ import {
   Patch, 
   Post, 
   Query, 
+  Res, 
   UploadedFile, 
   UseGuards, 
   UseInterceptors 
 } from '@nestjs/common';
+import type { Response } from 'express';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
@@ -47,8 +49,8 @@ export class UsersController {
 
   @Patch('changeMyPassword')
   @UseGuards(AuthGuard)
-  updateLoggedUserPassword(@CurrentUser() payload: JwtPayload, @Body() updateUserPasswordDto: UpdateUserPasswordDto) {
-    return this.usersService.updatePassword(payload.id, updateUserPasswordDto);
+  updateLoggedUserPassword(@CurrentUser() payload: JwtPayload, @Body() updateUserPasswordDto: UpdateUserPasswordDto, @Res({ passthrough: true }) res: Response) {
+    return this.usersService.updatePassword(payload.id, updateUserPasswordDto, res);
   }
   
   @Delete('deleteMe')
@@ -101,8 +103,8 @@ export class UsersController {
   @Patch('changePassword/:id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  updatePassword(@Param('id', ParseIntPipe) id: number, @Body() updateUserPasswordDto: UpdateUserPasswordDto) {
-    return this.usersService.updatePassword(id, updateUserPasswordDto);
+  updatePassword(@Param('id', ParseIntPipe) id: number, @Body() updateUserPasswordDto: UpdateUserPasswordDto, @Res({ passthrough: true }) res: Response) {
+    return this.usersService.updatePassword(id, updateUserPasswordDto, res);
   }
 
   @Delete(':id')

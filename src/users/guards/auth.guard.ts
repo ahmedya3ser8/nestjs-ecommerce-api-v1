@@ -17,11 +17,20 @@ export class AuthGuard implements CanActivate {
   public async canActivate(context: ExecutionContext) {
     // 1) check if token exists
     const req: Request = context.switchToHttp().getRequest();
-    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Not authorized, please login to access this route')
+
+    // if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+    //   throw new UnauthorizedException('Not authorized, please login to access this route');
+    // }
+
+    // const token = req.headers.authorization.split(' ')[1];
+
+    let token: string | undefined;
+    
+    if (req.cookies?.jwt) {
+      token = req.cookies.jwt;
     }
 
-    const token = req.headers.authorization.split(' ')[1];
+    if (!token) throw new UnauthorizedException('Not authorized, please login to access this route');
     
     // 2) verify token (invalid or expire)
     let payload: JwtPayload;

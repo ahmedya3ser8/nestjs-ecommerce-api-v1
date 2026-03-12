@@ -4,6 +4,7 @@ import { MoreThan, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { randomInt, createHash } from 'crypto';
 import * as bcrypt from 'bcryptjs';
+import type { Response } from 'express';
 
 import { RegisterDto } from '../auth/dto/register.dto'; 
 import { LoginDto } from './dto/login.dto';
@@ -52,7 +53,7 @@ export class AuthService {
     }
   }
 
-  public async login(loginDto: LoginDto) {
+  public async login(loginDto: LoginDto, res: Response) {
     const { email, password } = loginDto;
     
     const user = await this.userRepository.findOne({ where: { email } });
@@ -66,6 +67,13 @@ export class AuthService {
       email: user.email,
       fullName: user.fullName,
       role: user.role
+    })
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     })
 
     return {
@@ -135,7 +143,7 @@ export class AuthService {
     }
   }
 
-  public async resetPassword(resetPasswordDto: ResetPasswordDto) {
+  public async resetPassword(resetPasswordDto: ResetPasswordDto, res: Response) {
     const { email, newPassword, confirmNewPassword } = resetPasswordDto;
     
     const user = await this.userRepository.findOne({ where: { email } });
@@ -161,6 +169,13 @@ export class AuthService {
       email: user.email,
       fullName: user.fullName,
       role: user.role
+    })
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     })
 
     return {

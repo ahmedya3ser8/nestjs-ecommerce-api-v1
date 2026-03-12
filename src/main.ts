@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 
@@ -15,8 +16,11 @@ async function bootstrap() {
 
   app.use(helmet());
 
+  app.use(cookieParser());
+
   app.enableCors({
-    origin: 'http://localhost:4200'
+    origin: 'http://localhost:4200',
+    credentials: true
   })
 
   await app.listen(process.env.PORT ?? 3000);
